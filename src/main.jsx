@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './style.css'
 
@@ -24,11 +24,72 @@ const pages = {
 }
 
 const pageHashes = {
+  home: '#accueil',
   publish: '#publier',
   missions: '#missions',
   applications: '#candidatures',
 }
-const initialPage = Object.keys(pageHashes).find(key => pageHashes[key] === window.location.hash) ?? 'publish'
+function pageFromHash() {
+  return Object.keys(pageHashes).find(key => pageHashes[key] === window.location.hash) ?? 'home'
+}
+
+function Brand() {
+  return <span className="brand"><span className="stage-mark" aria-hidden="true"><i /><i /><i /></span><span>Stage<span className="brand-accent">Lik</span></span></span>
+}
+
+function Home() {
+  return (
+    <div className="shell landing">
+      <header className="landing-header">
+        <a className="brand-link" href="#accueil" aria-label="Accueil StageLik"><Brand /></a>
+        <nav aria-label="Navigation principale">
+          <a href="#missions">Missions étudiantes</a>
+          <a href="#publier">Pour les entreprises</a>
+          <a href="#fonctionnement">Comment ça marche</a>
+        </nav>
+        <a className="primary landing-button" href="#missions">Voir les missions</a>
+      </header>
+      <main className="landing-content" id="accueil">
+        <section className="landing-hero" aria-labelledby="landing-title">
+          <div className="landing-copy">
+            <h1 id="landing-title">Des missions courtes en entreprise pour acquérir de l’expérience</h1>
+            <p>Avec StageLik, les entreprises publient des missions pour répondre à un besoin précis. Les étudiants postulent selon leurs compétences et réalisent un projet qu’ils peuvent présenter dans leur portfolio.</p>
+            <div className="landing-actions">
+              <a className="primary landing-button" href="#missions">Explorer les missions</a>
+              <a className="outline landing-button" href="#publier">Publier une mission</a>
+            </div>
+          </div>
+          <figure className="project-preview">
+            <figcaption><Brand /></figcaption>
+            <div className="preview-layout">
+              <div className="preview-rail" aria-hidden="true"><span>▤</span><span>◇</span><span>✓</span></div>
+              <div className="preview-main">
+                <p>Exemple de mission</p>
+                <div className="preview-card">
+                  <h2>Créer une application de gestion des stocks</h2>
+                  <div className="preview-tags"><span>{example.duration}</span><span>React</span><span>Laravel</span><span>MySQL</span></div>
+                  <div className="preview-deliverable"><strong>Livrable</strong><br />Une application pour suivre les entrées et sorties de stock et signaler les produits à réapprovisionner.</div>
+                  <ol className="preview-steps" aria-label="Étapes de la mission">
+                    <li>Conception</li><li>Tests</li><li>Livraison</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </section>
+        <section className="landing-benefits" id="fonctionnement" aria-labelledby="benefits-title">
+          <h2 id="benefits-title">Comment ça marche</h2>
+          <div className="benefit-grid">
+            <article className="panel"><span>Entreprises</span><h3>Publiez votre mission</h3><p>Décrivez le problème à résoudre, le résultat attendu, la durée et les compétences nécessaires.</p></article>
+            <article className="panel"><span>Étudiants</span><h3>Choisissez une mission</h3><p>Consultez les offres et postulez à une mission qui correspond à vos compétences et à vos disponibilités.</p></article>
+            <article className="panel"><span>Portfolio</span><h3>Valorisez votre travail</h3><p>Une fois la mission terminée, présentez le besoin de départ, votre contribution et le résultat obtenu.</p></article>
+          </div>
+        </section>
+      </main>
+      <footer><strong>StageLik</strong><span>Missions étudiantes et projets d’entreprise</span></footer>
+    </div>
+  )
+}
 
 function readDemo() {
   try {
@@ -40,14 +101,29 @@ function readDemo() {
 
 function App() {
   const [data, setData] = useState(readDemo)
-  const [page, setPage] = useState(initialPage)
+  const [page, setPage] = useState(pageFromHash)
   const [form, setForm] = useState(example)
   const [openMissionId, setOpenMissionId] = useState(null)
   const [notice, setNotice] = useState('')
   const [error, setError] = useState(false)
   const company = page !== 'missions'
   const profile = company ? companyProfile : studentProfile
-  const [title, description, icon] = pages[page]
+  const [title, description, icon] = pages[page] ?? []
+
+  useEffect(() => {
+    function syncPage() {
+      const nextPage = pageFromHash()
+      if (nextPage === page) return
+      setPage(nextPage)
+      setOpenMissionId(null)
+      setNotice('')
+      setError(false)
+      if (window.location.hash !== '#fonctionnement') window.scrollTo(0, 0)
+    }
+
+    window.addEventListener('hashchange', syncPage)
+    return () => window.removeEventListener('hashchange', syncPage)
+  }, [page])
 
   function navigate(nextPage) {
     if (nextPage !== page) setOpenMissionId(null)
@@ -108,11 +184,13 @@ function App() {
     setNotice('Démo réinitialisée.')
   }
 
+  if (page === 'home') return <Home />
+
   return (
     <div className="shell">
       <header className="topbar">
         <div className="top-inner">
-          <div className="brand"><span className="brand-icon" aria-hidden="true">S</span>StageLik<span className="brand-period">.</span></div>
+          <a className="brand-link" href="#accueil" aria-label="Accueil StageLik"><Brand /></a>
           <button className="outline reset" onClick={reset}><span aria-hidden="true">↺</span> Réinitialiser la démo</button>
         </div>
       </header>
