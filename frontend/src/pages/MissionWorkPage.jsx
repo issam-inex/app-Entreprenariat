@@ -1,5 +1,7 @@
 import React from 'react'
-import { Avatar, Badge, Button, Notice } from '../components/ui.jsx'
+import { Badge, Button, Notice } from '../components/ui.jsx'
+import ProfileAvatar from '../components/ProfileAvatar.jsx'
+import { applicantProfileHref, companyProfileHref } from '../navigation.js'
 import AttachmentDownload from '../missions/AttachmentDownload.jsx'
 import MissionDeliveryForm from '../missions/MissionDeliveryForm.jsx'
 import MissionRequirements from '../missions/MissionRequirements.jsx'
@@ -19,8 +21,10 @@ export default function MissionWorkPage({ missions, company, busy, onDeliver, on
     return <article className="panel" key={mission.id}>
       <div className="mission-header">
         <div className="mission-identity">
-          {company && mission.student && <Avatar name={mission.student} photoUrl={mission.student_photo_url} />}
-          {!company && mission.company && <Avatar className="company-logo" name={mission.company} photoUrl={mission.company_photo_url} />}
+          {company && mission.student && <ProfileAvatar name={mission.student} photoUrl={mission.student_photo_url}
+            href={mission.student_id ? applicantProfileHref(mission.id, mission.student_id, true) : undefined} />}
+          {!company && mission.company && <ProfileAvatar className="company-logo" name={mission.company} photoUrl={mission.company_photo_url}
+            href={mission.company_id ? companyProfileHref(mission.company_id) : undefined} />}
           <h2>{mission.title}</h2>
         </div>
         <Badge tone={step === 2 ? 'success' : 'info'}>{steps[step]}</Badge>

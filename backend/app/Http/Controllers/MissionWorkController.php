@@ -47,11 +47,11 @@ class MissionWorkController extends Controller
                 $mission->student_photo_url = $mission->student_has_photo
                     ? "/api/v1/missions/{$mission->id}/applications/{$mission->student_id}/profile/photo"
                     : null;
-                unset($mission->student_id, $mission->student_has_photo);
+                unset($mission->student_has_photo);
             }
             if (isset($mission->company_id)) {
                 $mission->company_photo_url = CompanyProfileService::photoUrl($mission->company_id, $mission->company_photo_path);
-                unset($mission->company_id, $mission->company_photo_path);
+                unset($mission->company_photo_path);
             }
             $mission->has_attachment = (bool) $mission->has_attachment;
             $mission->attachment_blocked = (bool) $mission->attachment_blocked;

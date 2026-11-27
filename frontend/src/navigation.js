@@ -32,3 +32,11 @@ export const pageHashes = {
 export function pageFromHash(pathname) {
   return Object.keys(pageHashes).find(key => pageHashes[key] === '#' + pathname.slice(1)) ?? 'home'
 }
+
+export function companyProfileHref(companyId) {
+  return `#entreprises?profil=${companyId}`
+}
+
+export function applicantProfileHref(missionId, studentId, fromWork = false) {
+  return `#candidatures?mission=${missionId}&etudiant=${studentId}${fromWork ? '&retour=missions' : ''}`
+}

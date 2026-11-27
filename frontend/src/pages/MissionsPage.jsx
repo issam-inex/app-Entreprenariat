@@ -5,7 +5,9 @@ import MissionPublication from '../missions/MissionPublication.jsx'
 import MissionCategoryFilter from '../missions/MissionCategoryFilter.jsx'
 import StatusFilter from '../missions/StatusFilter.jsx'
 import { filterMissionsByCategory, missionCategories } from '../missions/missionCategories.js'
-import { Avatar, Badge } from '../components/ui.jsx'
+import { Badge } from '../components/ui.jsx'
+import ProfileAvatar from '../components/ProfileAvatar.jsx'
+import { companyProfileHref } from '../navigation.js'
 import { FormField, ValidatedForm } from '../components/ValidatedForm.jsx'
 
 export default function MissionsPage({ data, busy, onApply, canApply }) {
@@ -31,7 +33,8 @@ export default function MissionsPage({ data, busy, onApply, canApply }) {
           <article className="panel" key={mission.id}>
             <div className="mission-header">
               <div className="mission-identity">
-                <Avatar className="company-logo" name={mission.company}
+                <ProfileAvatar className="company-logo" name={mission.company}
+                  href={mission.companyId ? companyProfileHref(mission.companyId) : undefined}
                   photoUrl={data.companies?.find(company => company.id === mission.companyId)?.photo_url} />
                 <div>
                   <h2>{mission.title}</h2>

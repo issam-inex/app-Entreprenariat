@@ -46,7 +46,7 @@ Le premier incrément expose une inscription commune `POST /auth/register` avec 
 
 ## Missions, candidatures et livrables
 
-Les candidatures étudiantes de `GET /missions` incluent `company` et `companyId` pour associer chaque candidature à la photo de l’annuaire. Le suivi étudiant `GET /missions/work` expose directement `company_photo_url`.
+Les candidatures étudiantes de `GET /missions` incluent `company` et `companyId` pour retrouver le profil dans l’annuaire. Le suivi `GET /missions/work` expose `company_id` et `company_photo_url` côté étudiant, et `student_id` et `student_photo_url` côté entreprise pour ouvrir les profils autorisés.
 
 La création et la modification acceptent jusqu’à trois pièces jointes privées de 2 Mo chacune. Envoyer `attachments[]` en multipart. Pour modifier une mission en multipart, utiliser `POST /missions/{id}` avec `_method=PATCH`. Le champ facultatif `remove_attachments` contient les identifiants à retirer. Les listes exposent `attachments[].id` et `attachments[].name`. `GET /missions/{mission}/attachments/{attachment}` télécharge le fichier pour l’entreprise propriétaire, les étudiants ayant accès à la mission dans le catalogue ou l’étudiant retenu dans son suivi.
 

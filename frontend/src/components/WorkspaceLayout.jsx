@@ -2,7 +2,8 @@ import React from 'react'
 import { BadgeCheck, BriefcaseBusiness, ClipboardCheck, FilePlus, Inbox, LogOut, UserRound } from 'lucide-react'
 import Brand from './Brand.jsx'
 import ThemeToggle from './ThemeToggle.jsx'
-import { Avatar, Badge, Button, SkipLink } from './ui.jsx'
+import ProfileAvatar from './ProfileAvatar.jsx'
+import { Badge, Button, SkipLink } from './ui.jsx'
 import { pages } from '../navigation.js'
 
 const icons = { admin: ClipboardCheck, verification: BadgeCheck, publish: FilePlus, applications: Inbox, myApplications: Inbox, missions: BriefcaseBusiness, companyMissions: BriefcaseBusiness, companies: BriefcaseBusiness, missionWork: ClipboardCheck, studentProfile: UserRound, companyProfile: BriefcaseBusiness }
@@ -29,7 +30,8 @@ export default function WorkspaceLayout({ account, photoUrl, page, allowedPages,
         <aside className="sidebar" aria-label="Espace de travail">
           <div className="profile">
             <div className="profile-top">
-              <Avatar name={account.name} photoUrl={photoUrl} />
+              <ProfileAvatar name={account.name} photoUrl={photoUrl}
+                href={company ? '#profil-entreprise' : account.role === 'student' ? '#mon-profil' : undefined} />
               <div><strong>{account.name}</strong><small>Profil {roleLabel}</small>
                 {company && account.status === 'verified' && <Badge tone="success"><BadgeCheck size={13} aria-hidden="true" /> Entreprise vérifiée</Badge>}
               </div>

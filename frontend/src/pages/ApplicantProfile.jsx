@@ -3,12 +3,14 @@ import { useQuery } from '@tanstack/react-query'
 import { Avatar, Button, Notice, Skeleton } from '../components/ui.jsx'
 import { request } from '../services/api.js'
 
-export default function ApplicantProfile({ path, onBack }) {
+export default function ApplicantProfile({ path, backHref, onBack }) {
   const query = useQuery({ queryKey: ['applicant-profile', path], queryFn: () => request(path), retry: false, gcTime: 0 })
   const profile = query.data
 
   return <div className="cards">
-    <div><Button variant="outline" autoFocus onClick={onBack}>Retour aux candidatures</Button></div>
+    <div><Button variant="outline" autoFocus href={backHref} onClick={backHref ? undefined : onBack}>
+      {backHref ? 'Retour aux missions en cours' : 'Retour aux candidatures'}
+    </Button></div>
     {query.isPending && <Skeleton label="Chargement du profil…" />}
     {query.isError && <Notice tone="error">{query.error.message}</Notice>}
     {profile && !query.isError && <article className="panel">

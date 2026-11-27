@@ -1,14 +1,23 @@
 import React, { useState } from 'react'
-import { Avatar, Badge, Button } from '../components/ui.jsx'
+import { useSearchParams } from 'react-router-dom'
+import { Badge, Button } from '../components/ui.jsx'
+import ProfileAvatar from '../components/ProfileAvatar.jsx'
+import { applicantProfileHref } from '../navigation.js'
 import { FormField, ValidatedForm } from '../components/ValidatedForm.jsx'
 import ApplicantProfile from './ApplicantProfile.jsx'
 
 export default function ApplicationsPage({ data, busy, onContact, onAccept, onReject }) {
   const [contact, setContact] = useState(null)
-  const [profile, setProfile] = useState(null)
+  const [params, setParams] = useSearchParams()
+  const missionId = params.get('mission')
+  const studentId = params.get('etudiant')
   const missions = data.missions.filter(mission => data.applications.some(application => application.missionId === mission.id))
 
-  if (profile) return <ApplicantProfile path={profile} onBack={() => setProfile(null)} />
+  if (/^\d+$/.test(missionId ?? '') && /^\d+$/.test(studentId ?? '')) {
+    const fromWork = params.get('retour') === 'missions'
+    return <ApplicantProfile path={`missions/${missionId}/applications/${studentId}/profile`}
+      backHref={fromWork ? '#missions-en-cours' : undefined} onBack={() => setParams({})} />
+  }
   if (!missions.length) return <p className="panel empty">Aucune candidature reçue pour le moment.</p>
 
   return <div className="cards">{missions.map(mission => (
@@ -18,10 +27,8 @@ export default function ApplicationsPage({ data, busy, onContact, onAccept, onRe
         const key = `${mission.id}-${application.studentId}`
         const profilePath = `missions/${mission.id}/applications/${application.studentId}/profile`
         return <li key={key}>
-          <Button variant="ghost" className="applicant-avatar-button" aria-label={`Voir le profil de ${application.name}`}
-            onClick={() => setProfile(profilePath)}>
-            <Avatar name={application.name} photoUrl={Number(application.has_photo) ? `/api/v1/${profilePath}/photo` : undefined} />
-          </Button>
+          <ProfileAvatar name={application.name} href={applicantProfileHref(mission.id, application.studentId)}
+            photoUrl={Number(application.has_photo) ? `/api/v1/${profilePath}/photo` : undefined} />
           <strong>{application.name}</strong>
           <Badge tone={application.status === 'accepted' ? 'success' : application.status === 'rejected' ? 'error' : 'info'}>
             {{ accepted: 'Acceptée', not_selected: 'Non retenue', rejected: 'Refusée' }[application.status] ?? 'Reçue'}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Avatar, Badge, Button } from '../components/ui.jsx'
+import { Badge, Button } from '../components/ui.jsx'
+import ProfileAvatar from '../components/ProfileAvatar.jsx'
+import { companyProfileHref } from '../navigation.js'
 import { FormField, ValidatedForm } from '../components/ValidatedForm.jsx'
 import StatusFilter from '../missions/StatusFilter.jsx'
 
@@ -19,7 +21,8 @@ export default function MyApplicationsPage({ applications, companies = [], busy,
     {filteredApplications.map(application => (
     <article className="panel" key={application.missionId}>
       <div className="mission-identity">
-        {application.company && <Avatar className="company-logo" name={application.company}
+        {application.company && <ProfileAvatar className="company-logo" name={application.company}
+          href={companies.some(company => company.id === application.companyId) ? companyProfileHref(application.companyId) : undefined}
           photoUrl={companies.find(company => company.id === application.companyId)?.photo_url} />}
         <div>
           <h2>{application.title}</h2>

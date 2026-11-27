@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Avatar, Badge, Button } from '../components/ui.jsx'
+import ProfileAvatar from '../components/ProfileAvatar.jsx'
+import { companyProfileHref } from '../navigation.js'
 import MissionsPage from './MissionsPage.jsx'
 
 const searchable = value => value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim()
 
 export default function CompaniesPage({ data, busy, canApply, onApply }) {
   const [search, setSearch] = useState('')
-  const [selectedId, setSelectedId] = useState(null)
+  const [params, setParams] = useSearchParams()
+  const selectedId = params.get('profil')
   const companies = data.companies ?? []
-  const selected = companies.find(company => company.id === selectedId)
+  const selected = companies.find(company => String(company.id) === selectedId)
   const counts = new Map()
   for (const mission of data.missions) {
     if (mission.status !== 'occupied') counts.set(mission.companyId, (counts.get(mission.companyId) ?? 0) + 1)
@@ -18,7 +22,7 @@ export default function CompaniesPage({ data, busy, canApply, onApply }) {
   if (selected) {
     const missions = data.missions.filter(mission => mission.companyId === selected.id)
     return <div className="cards">
-      <div><Button variant="outline" onClick={() => setSelectedId(null)}>Retour aux entreprises</Button></div>
+      <div><Button variant="outline" onClick={() => setParams({})}>Retour aux entreprises</Button></div>
       <section className="panel">
         <div className="student-profile-identity">
           <Avatar name={selected.name} photoUrl={selected.photo_url} />
@@ -49,14 +53,14 @@ export default function CompaniesPage({ data, busy, canApply, onApply }) {
       const count = counts.get(company.id) ?? 0
       return <article className="panel mission-header" key={company.id}>
         <div className="mission-identity">
-          <Avatar name={company.name} photoUrl={company.photo_url} />
+          <ProfileAvatar name={company.name} photoUrl={company.photo_url} href={companyProfileHref(company.id)} />
           <div>
             <h2>{company.name}</h2>
             {(company.city || company.sector) && <p>{[company.city, company.sector].filter(Boolean).join(' · ')}</p>}
             <p>{count} {count === 1 ? 'mission disponible' : 'missions disponibles'}</p>
           </div>
         </div>
-        <Button variant="outline" onClick={() => setSelectedId(company.id)}>Voir le profil</Button>
+        <Button variant="outline" onClick={() => setParams({ profil: company.id })}>Voir le profil</Button>
       </article>
     }) : <p className="panel empty">{search.trim() ? 'Aucune entreprise ne correspond à votre recherche.' : 'Aucune entreprise vérifiée pour le moment.'}</p>}
   </div>
