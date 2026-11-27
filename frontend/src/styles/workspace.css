@@ -1,0 +1,32 @@
+.workspace-shell .layout { grid-template-columns: 232px minmax(0, 1fr); gap: clamp(24px, 4vw, 52px); }
+.workspace-shell .top-inner { min-height: 64px; }
+.workspace-shell .sidebar { gap: 14px; }
+.workspace-shell .profile { border-radius: var(--radius-panel); padding: 14px; }
+.workspace-shell .profile-top { margin: 0; overflow-wrap: anywhere; }
+.workspace-shell .profile .ui-badge { margin-top: 6px; }
+.workspace-shell .nav-item { display: flex; align-items: center; gap: 10px; border-radius: var(--radius); font-size: .875rem; }
+.workspace-shell .nav-item svg { flex: none; }
+.workspace-shell .nav-item[aria-current] { background: var(--blue-tint); border-color: var(--accent-line); color: var(--blue-dark); }
+.ui-button.admin-delete-company { color: var(--danger); border-color: var(--danger-line); }
+.ui-button.admin-delete-company:hover { background: var(--danger-tint); }
+.student-profile-identity, .student-profile-reminder { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.student-profile-identity { margin-bottom: 18px; }
+.student-profile-identity h2 { margin: 0; }
+.student-profile-identity .ui-avatar { width: 64px; height: 64px; flex-basis: 64px; font-size: 1.25rem; }
+.student-profile-reminder { justify-content: space-between; }
+.profile-links-heading { display: flex; align-items: center; gap: 12px; }
+.profile-links-heading h3 { margin: 0; }
+.profile-links-heading .ui-button { width: 44px; padding: 0; }
+.profile-link-row { display: grid; min-width: 0; }
+.profile-link-row label { display: block; }
+.profile-link-row input { width: 100%; }
+.profile-link-row > button { justify-self: start; }
+.ui-button.applicant-avatar-button { padding: 3px; }
+.workspace-title { margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.workspace-title h1 { margin: 5px 0 8px; font-size: clamp(1.8rem, 4vw, 2.75rem); }
+.workspace-title p { margin: 0; color: var(--muted); }
+.workspace-title .workspace-context { color: var(--blue-dark); font-size: .875rem; font-weight: 650; }
+@media (max-width: 760px) {
+  .workspace-shell .layout { grid-template-columns: 1fr; gap: 20px; }
+  .workspace-shell .sidebar { gap: 10px; }
+}

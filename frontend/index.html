@@ -1,0 +1,28 @@
+﻿<!doctype html>
+<html lang="fr" spellcheck="false">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <style>
+      html { background: var(--background, #f5f7fb); color-scheme: light; }
+      html[data-theme="dark"] { background: var(--background, #101827); color-scheme: dark; }
+    </style>
+    <script>
+      (() => {
+        let theme
+        try { theme = localStorage.getItem('stagelik-theme') } catch {}
+        if (theme !== 'dark' && theme !== 'light') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+        document.documentElement.dataset.theme = theme
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#101827' : '#f5f7fb'
+      })()
+    </script>
+    <title>StageLik</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
