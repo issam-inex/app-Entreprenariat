@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Badge, Button } from '../components/ui.jsx'
+import { Avatar, Badge, Button } from '../components/ui.jsx'
 import { FormField, ValidatedForm } from '../components/ValidatedForm.jsx'
 import StatusFilter from '../missions/StatusFilter.jsx'
 
-export default function MyApplicationsPage({ applications, busy, canEdit, onSave, onWithdraw }) {
+export default function MyApplicationsPage({ applications, companies = [], busy, canEdit, onSave, onWithdraw }) {
   const [editing, setEditing] = useState(null)
   const [status, setStatus] = useState('')
   const filteredApplications = applications.filter(application => !status || (application.status ?? 'submitted') === status)
@@ -18,7 +18,14 @@ export default function MyApplicationsPage({ applications, busy, canEdit, onSave
     {!filteredApplications.length && <p className="panel empty">Aucune candidature pour ce statut.</p>}
     {filteredApplications.map(application => (
     <article className="panel" key={application.missionId}>
-      <h2>{application.title}</h2>
+      <div className="mission-identity">
+        {application.company && <Avatar className="company-logo" name={application.company}
+          photoUrl={companies.find(company => company.id === application.companyId)?.photo_url} />}
+        <div>
+          <h2>{application.title}</h2>
+          {application.company && <p>{application.company}</p>}
+        </div>
+      </div>
       <Badge tone={application.status === 'accepted' ? 'success' : 'neutral'}>
         {{ accepted: 'Acceptée', not_selected: 'Non retenue', rejected: 'Refusée' }[application.status] ?? 'Envoyée'}
       </Badge>

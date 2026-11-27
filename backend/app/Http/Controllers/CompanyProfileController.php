@@ -47,7 +47,7 @@ class CompanyProfileController extends Controller
     {
         $path = $profile['photo_path'] ?? null;
         unset($profile['photo_path']);
-        $profile['photo_url'] = $path ? "/api/v1/companies/$company/photo?v=".hash('sha256', $path) : null;
+        $profile['photo_url'] = CompanyProfileService::photoUrl($company, $path);
 
         return response()->json($profile)->header('Cache-Control', 'private, no-store');
     }

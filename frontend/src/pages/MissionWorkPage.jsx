@@ -1,5 +1,5 @@
 import React from 'react'
-import { Badge, Button, Notice } from '../components/ui.jsx'
+import { Avatar, Badge, Button, Notice } from '../components/ui.jsx'
 import AttachmentDownload from '../missions/AttachmentDownload.jsx'
 import MissionDeliveryForm from '../missions/MissionDeliveryForm.jsx'
 import MissionRequirements from '../missions/MissionRequirements.jsx'
@@ -18,7 +18,10 @@ export default function MissionWorkPage({ missions, company, busy, onDeliver, on
     const canReplace = !company && step === 1 && flagged
     return <article className="panel" key={mission.id}>
       <div className="mission-header">
-        <h2>{mission.title}</h2>
+        <div className="mission-identity">
+          {!company && mission.company && <Avatar className="company-logo" name={mission.company} photoUrl={mission.company_photo_url} />}
+          <h2>{mission.title}</h2>
+        </div>
         <Badge tone={step === 2 ? 'success' : 'info'}>{steps[step]}</Badge>
       </div>
       <p className="mission-description">{company ? `Étudiant retenu : ${mission.student}` : mission.company} · Durée prévue : {mission.duration}</p>

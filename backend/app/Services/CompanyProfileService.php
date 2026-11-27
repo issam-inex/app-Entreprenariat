@@ -10,6 +10,11 @@ use Throwable;
 
 class CompanyProfileService
 {
+    public static function photoUrl(int $company, ?string $path): ?string
+    {
+        return $path ? "/api/v1/companies/$company/photo?v=".hash('sha256', $path) : null;
+    }
+
     public function save(User $company, array $fields, ?UploadedFile $photo, bool $removePhoto): array
     {
         $uploaded = null;

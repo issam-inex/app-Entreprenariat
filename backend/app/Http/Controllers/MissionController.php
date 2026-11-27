@@ -7,6 +7,7 @@ use App\Http\Requests\SaveApplication;
 use App\Models\Mission;
 use App\Models\MissionAttachment;
 use App\Models\User;
+use App\Services\CompanyProfileService;
 use App\Services\SaveMissionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,8 +44,9 @@ class MissionController extends Controller
             $missions->whereIn('m.status', ['published', 'occupied'])->where('c.status', 'verified')
                 ->whereNotNull('c.email_verified_at')->whereNull('m.completed_at');
             $applications = DB::table('applications as a')->join('missions as m', 'm.id', '=', 'a.mission_id')
+                ->join('users as company', 'company.id', '=', 'm.company_id')
                 ->where('a.student_id', $account->id)->orderByDesc('m.id')
-                ->select(['a.mission_id as missionId', 'a.message', 'a.share_email', 'm.title'])
+                ->select(['a.mission_id as missionId', 'a.message', 'a.share_email', 'm.title', 'm.company_id as companyId', 'company.name as company'])
                 ->selectRaw(self::APPLICATION_STATUS)
                 ->get();
         }
@@ -66,7 +68,7 @@ class MissionController extends Controller
                     $photo = $company->photo_path;
 
                     return $company->only(['id', 'name', 'city', 'sector', 'description', 'website']) + [
-                        'photo_url' => $photo ? "/api/v1/companies/{$company->id}/photo?v=".hash('sha256', $photo) : null,
+                        'photo_url' => CompanyProfileService::photoUrl($company->id, $photo),
                     ];
                 })]
             : [];

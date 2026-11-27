@@ -6,6 +6,7 @@ use App\Http\Requests\SubmitMissionDelivery;
 use App\Models\Mission;
 use App\Models\MissionAttachment;
 use App\Models\User;
+use App\Services\CompanyProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -34,10 +35,16 @@ class MissionWorkController extends Controller
             $query->where('m.company_id', $user->id)->join('users as student', 'student.id', '=', 'm.selected_student_id')
                 ->addSelect('student.name as student');
         } else {
-            $query->where('m.selected_student_id', $user->id);
+            $query->where('m.selected_student_id', $user->id)
+                ->leftJoin('company_profiles as profile', 'profile.user_id', '=', 'company.id')
+                ->addSelect(['company.id as company_id', 'profile.photo_path as company_photo_path']);
         }
 
         $missions = $query->get()->map(function ($mission) {
+            if (isset($mission->company_id)) {
+                $mission->company_photo_url = CompanyProfileService::photoUrl($mission->company_id, $mission->company_photo_path);
+                unset($mission->company_id, $mission->company_photo_path);
+            }
             $mission->has_attachment = (bool) $mission->has_attachment;
             $mission->attachment_blocked = (bool) $mission->attachment_blocked;
             $mission->link_reported = $mission->delivery_link_reported_at !== null;

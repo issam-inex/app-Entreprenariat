@@ -154,7 +154,10 @@ test('un étudiant recherche une entreprise puis consulte ses missions', async (
   await page.route('**/api/v1/missions', route => route.fulfill({ json: {
     companies: [{ id: 1, name: 'Atelier Élan', city: 'Rabat', sector: 'Design', description: 'Studio créatif.', website: 'https://example.test', photo_url: photoUrl }, { id: 2, name: 'Alpha' }],
     missions: [{ id: 12, companyId: 1, company: 'Atelier Élan', title: 'Créer un prototype', status: 'occupied' }],
-    applications: [],
+    applications: [{ missionId: 13, companyId: 1, company: 'Atelier Élan', title: 'Créer une affiche', status: 'submitted' }],
+  } }))
+  await page.route('**/api/v1/missions/work', route => route.fulfill({ json: {
+    missions: [{ id: 14, title: 'Mettre à jour une maquette', company: 'Atelier Élan', company_photo_url: photoUrl }],
   } }))
   await page.goto('/#entreprises')
   await expect(page.getByRole('heading', { name: 'Alpha', exact: true })).toBeVisible()
@@ -171,4 +174,10 @@ test('un étudiant recherche une entreprise puis consulte ses missions', async (
   await expect(page.getByRole('button', { name: 'Postuler' })).toHaveCount(0)
   await page.getByRole('button', { name: 'Retour aux entreprises' }).click()
   await expect(page.getByRole('searchbox')).toHaveValue('elan')
+  await page.getByRole('button', { name: 'Mes candidatures' }).click()
+  await expect(page.locator('.company-logo img')).toBeVisible()
+  await expect(page.locator('.company-logo img')).toHaveAttribute('src', photoUrl)
+  await page.getByRole('button', { name: 'Mes missions en cours' }).click()
+  await expect(page.locator('.company-logo img')).toBeVisible()
+  await expect(page.locator('.company-logo img')).toHaveAttribute('src', photoUrl)
 })

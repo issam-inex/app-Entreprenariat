@@ -260,7 +260,7 @@ export default function App() {
       {data && page === 'companies' && <CompaniesPage data={data} busy={busy} canApply={Boolean(account.email_verified_at)}
         onApply={applyToMission} />}
       {data && page === 'myApplications' && (
-        <MyApplicationsPage applications={data.applications} busy={busy} canEdit={Boolean(account.email_verified_at)}
+        <MyApplicationsPage applications={data.applications} companies={data.companies} busy={busy} canEdit={Boolean(account.email_verified_at)}
           onSave={(id, application, showErrors) => changeMission(`missions/${id}/applications/me`, 'PATCH', application, 'Candidature modifiée.', showErrors)}
           onWithdraw={id => changeMission(`missions/${id}/applications/me`, 'DELETE', undefined, 'Candidature retirée.')} />
       )}
