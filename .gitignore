@@ -1,2 +1,5 @@
 ﻿node_modules/
 dist/
+.stagelik/
+frontend/test-results/
+frontend/playwright-report/
