@@ -57,7 +57,7 @@ function ProductPreview() {
   )
 }
 
-export default function HomePage({ workspace }) {
+export default function HomePage({ workspace, profile }) {
   const { pathname } = useLocation()
   useEffect(() => {
     const section = pathname.slice(1)
@@ -69,7 +69,7 @@ export default function HomePage({ workspace }) {
   return (
     <div className="shell landing">
       <SkipLink />
-      <PublicNavbar workspace={workspace} />
+      <PublicNavbar workspace={workspace} profile={profile} />
       <main id="contenu" tabIndex={-1}>
         <section className="landing-hero landing-container" aria-labelledby="landing-title">
           <div className="landing-copy">

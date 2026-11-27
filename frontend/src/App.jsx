@@ -46,6 +46,13 @@ export default function App() {
     retry: false,
   })
   const profile = account?.role === 'student' ? profileQuery.data : undefined
+  const companyProfileQuery = useQuery({
+    queryKey: ['company-profile', account?.id],
+    queryFn: () => request('company/profile'),
+    enabled: company,
+    retry: false,
+  })
+  const photoUrl = company ? companyProfileQuery.data?.photo_url : profile?.photo_url
   const missionQuery = useQuery({
     queryKey: ['missions', account?.id],
     queryFn: () => request('missions'),
@@ -201,7 +208,8 @@ export default function App() {
     setError(false)
   }
 
-  if (page === 'home') return <HomePage workspace={account ? pageHashes[defaultPage] : undefined} />
+  if (page === 'home') return <HomePage workspace={account ? pageHashes[defaultPage] : undefined}
+    profile={account && !admin ? { name: account.name, photoUrl, href: pageHashes[company ? 'companyProfile' : 'studentProfile'] } : undefined} />
   if (page === 'password') return (
     <Suspense fallback={<p className="auth-layout" role="status">Chargement…</p>}>
       <PasswordPage />
@@ -217,7 +225,7 @@ export default function App() {
   }} />
 
   return (
-    <WorkspaceLayout account={account} photoUrl={profile?.photo_url} page={page} allowedPages={allowedPages} busy={busy} onLogout={logout} onNavigate={navigate}>
+    <WorkspaceLayout account={account} photoUrl={photoUrl} page={page} allowedPages={allowedPages} busy={busy} onLogout={logout} onNavigate={navigate}>
       {notice && <Notice tone={error ? 'error' : 'success'}>{notice}</Notice>}
       {profile?.complete === false && page !== 'studentProfile' && <Notice>
         <div className="student-profile-reminder">
@@ -229,7 +237,7 @@ export default function App() {
         <StudentProfilePage account={account} query={profileQuery} onSave={value => queryClient.setQueryData(profileKey, value)} />
       </Suspense>}
       {page === 'companyProfile' && company && <Suspense fallback={<Skeleton label="Chargement du profil…" />}>
-        <CompanyProfilePage account={account} />
+        <CompanyProfilePage account={account} profile={companyProfileQuery} />
       </Suspense>}
 
       {company && account.status !== 'verified' && ['publish', 'companyMissions'].includes(page) && (

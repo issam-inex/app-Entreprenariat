@@ -10,6 +10,7 @@
 .public-actions { justify-self: end; }
 .public-actions a { white-space: nowrap; }
 .public-navigation .mobile-register, .public-actions .menu-toggle { display: none; }
+.public-navigation .mobile-workspace { display: none; }
 .public-actions .menu-toggle { width: 44px; padding: 0; }
 
 .landing > main { flex: 1; }
@@ -125,4 +126,6 @@
 @media (max-width: 340px) {
   .public-navbar-inner { width: calc(100% - 24px); gap: 0 6px; }
   .public-navbar .brand { font-size: 1.15rem; }
+  .public-actions .home-workspace-link:has(+ .profile-avatar-link) { display: none; }
+  .public-navigation .mobile-workspace { display: flex; }
 }

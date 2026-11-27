@@ -1,5 +1,26 @@
 import { expect, test } from '@playwright/test'
 
+for (const role of ['student', 'company']) {
+  test(`affiche la photo du compte ${role} sur l’accueil`, async ({ page }) => {
+    const photo = '/api/v1/companies/12/photo'
+    await page.route('**/api/v1/auth/me', route => route.fulfill({ json: {
+      account: { id: 12, name: 'Compte test', role, status: 'verified', email_verified_at: '2026-01-01' },
+    } }))
+    await page.route(`**/api/v1/${role}/profile`, route => route.fulfill({ json: { complete: true, photo_url: photo } }))
+    await page.route(`**${photo}`, route => route.fulfill({
+      contentType: 'image/png',
+      body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jBXsAAAAASUVORK5CYII=', 'base64'),
+    }))
+    await page.setViewportSize({ width: 375, height: 800 })
+    await page.goto('/#accueil')
+    const profile = page.getByRole('link', { name: 'Voir le profil de Compte test' })
+    await expect(profile.locator('img')).toBeVisible()
+    await expect(profile.locator('img')).toHaveAttribute('src', photo)
+    await profile.click()
+    await expect(page.getByRole('heading', { name: role === 'student' ? 'Mon profil' : 'Profil entreprise' })).toBeVisible()
+  })
+}
+
 test('suit le thème système jusqu’à ce que la personne choisisse un thème', async ({ page }) => {
   await page.route('**/api/v1/auth/me', route => route.fulfill({ json: { account: null } }))
   await page.emulateMedia({ colorScheme: 'dark' })

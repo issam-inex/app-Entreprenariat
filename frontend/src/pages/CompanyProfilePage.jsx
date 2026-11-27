@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { FormField, ValidatedForm } from '../components/ValidatedForm.jsx'
 import { Button, Notice, Skeleton } from '../components/ui.jsx'
 import ProfilePhotoPicker from '../components/ProfilePhotoPicker.jsx'
 import { request } from '../services/api.js'
 
-export default function CompanyProfilePage({ account }) {
+export default function CompanyProfilePage({ account, profile }) {
   const [saving, setSaving] = useState(false)
   const [notice, setNotice] = useState(null)
   const cache = useQueryClient()
   const key = ['company-profile', account.id]
-  const profile = useQuery({ queryKey: key, queryFn: () => request('company/profile'), retry: false })
 
   async function save(event, showErrors) {
     const form = event.currentTarget

@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import Brand from './Brand.jsx'
 import ThemeToggle from './ThemeToggle.jsx'
+import ProfileAvatar from './ProfileAvatar.jsx'
 import { Button } from './ui.jsx'
 
-export default function PublicNavbar({ workspace, currentPage }) {
+export default function PublicNavbar({ workspace, currentPage, profile }) {
   const [open, setOpen] = useState(false)
   const toggle = useRef(null)
   const firstLink = useRef(null)
@@ -28,11 +29,15 @@ export default function PublicNavbar({ workspace, currentPage }) {
           <a href="#categories" onClick={close}>Exemples de missions</a>
           <a href="#fonctionnement" onClick={close}>Comment ça marche</a>
           {!workspace && <a className="mobile-register" href="#inscription" onClick={close}>Créer un compte</a>}
+          {workspace && profile && <a className="mobile-workspace" href={workspace} onClick={close}>Mon espace</a>}
         </nav>
         <div className="public-actions">
           <ThemeToggle />
           {workspace ? (
-            <Button href={workspace} onClick={close}>Mon espace</Button>
+            <>
+              <Button className="home-workspace-link" href={workspace} onClick={close}>Mon espace</Button>
+              {profile && <ProfileAvatar name={profile.name} photoUrl={profile.photoUrl} href={profile.href} />}
+            </>
           ) : (
             <>
               <Button variant="ghost" href="#connexion" onClick={close}
