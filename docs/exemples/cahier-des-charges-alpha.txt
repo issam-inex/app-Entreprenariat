@@ -1,0 +1,25 @@
+Titre : Créer un tableau de bord de suivi des commandes
+
+Contexte : Alpha suit ses commandes dans plusieurs fichiers Excel. L’équipe souhaite centraliser les informations pour repérer rapidement les commandes en retard.
+
+Objectifs :
+- Afficher la liste des commandes avec leur date, leur statut et leur échéance.
+- Permettre la recherche par référence et le filtrage par statut.
+- Mettre en évidence les commandes non livrées dont l’échéance est dépassée.
+
+Livrables :
+- Un prototype web responsive alimenté par un fichier de commandes fictives.
+- Un guide court pour lancer le prototype et tester les filtres.
+
+Durée : 2 semaines
+
+Compétences : React, JavaScript, CSS, manipulation de données CSV et Git.
+
+Consignes :
+- Utiliser uniquement des données fictives.
+- Prévoir une interface utilisable sur un écran de 375 px.
+
+Critères d’évaluation :
+- Les filtres et la recherche donnent les résultats attendus sur le jeu de test.
+- Les commandes en retard sont identifiables sans dépendre uniquement d’une couleur.
+- Le guide permet de lancer le prototype à partir du dépôt.
