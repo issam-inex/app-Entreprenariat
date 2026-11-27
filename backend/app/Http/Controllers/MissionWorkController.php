@@ -33,7 +33,9 @@ class MissionWorkController extends Controller
             ->orderByDesc('m.id');
         if ($user->role === 'company') {
             $query->where('m.company_id', $user->id)->join('users as student', 'student.id', '=', 'm.selected_student_id')
-                ->addSelect('student.name as student');
+                ->leftJoin('student_profiles as student_profile', 'student_profile.user_id', '=', 'student.id')
+                ->addSelect(['student.name as student', 'student.id as student_id'])
+                ->selectRaw('CASE WHEN student_profile.photo_path IS NULL THEN 0 ELSE 1 END AS student_has_photo');
         } else {
             $query->where('m.selected_student_id', $user->id)
                 ->leftJoin('company_profiles as profile', 'profile.user_id', '=', 'company.id')
@@ -41,6 +43,12 @@ class MissionWorkController extends Controller
         }
 
         $missions = $query->get()->map(function ($mission) {
+            if (isset($mission->student_id)) {
+                $mission->student_photo_url = $mission->student_has_photo
+                    ? "/api/v1/missions/{$mission->id}/applications/{$mission->student_id}/profile/photo"
+                    : null;
+                unset($mission->student_id, $mission->student_has_photo);
+            }
             if (isset($mission->company_id)) {
                 $mission->company_photo_url = CompanyProfileService::photoUrl($mission->company_id, $mission->company_photo_path);
                 unset($mission->company_id, $mission->company_photo_path);

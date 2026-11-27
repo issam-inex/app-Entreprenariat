@@ -47,8 +47,12 @@ class StudentProfileTest extends TestCase
         $this->actingAs($company)->getJson($candidate)->assertOk()
             ->assertJsonPath('bio', 'Étudiant en design')->assertJsonPath('links', $links)->assertJsonMissingPath('email');
         $this->get("$candidate/photo")->assertOk()->assertHeader('Content-Type', 'image/png');
+        $this->postJson("/api/v1/missions/$mission/applications/{$student->id}/accept")->assertOk();
+        $this->getJson('/api/v1/missions/work')->assertJsonPath('missions.0.student_photo_url', "$candidate/photo")
+            ->assertJsonMissingPath('missions.0.student_has_photo');
         $unrelated = User::factory()->create(['role' => 'company', 'status' => 'verified']);
         $this->actingAs($unrelated)->getJson("$candidate/photo")->assertNotFound();
+        $this->getJson('/api/v1/missions/work')->assertJsonCount(0, 'missions');
         $company->forceFill(['status' => 'suspended'])->save();
         $this->actingAs($company)->getJson($candidate)->assertForbidden();
         $replacement = UploadedFile::fake()->createWithContent('portrait-2.png', $png);

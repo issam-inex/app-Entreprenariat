@@ -60,7 +60,7 @@ Pour un étudiant, `GET /missions` renvoie également `companies`, l’annuaire 
 
 | Méthode et route | Accès et effet |
 | --- | --- |
-| `GET /missions/work` | Étudiant retenu ou entreprise propriétaire vérifiée. Retourne `has_attachment` et les indicateurs historiques `attachment_blocked` et `link_reported`. Un lien déjà signalé reste masqué. |
+| `GET /missions/work` | Étudiant retenu ou entreprise propriétaire vérifiée. Retourne `student_photo_url` côté entreprise lorsqu’une photo a été ajoutée, `has_attachment` et les indicateurs historiques `attachment_blocked` et `link_reported`. Un lien déjà signalé reste masqué. |
 | `POST /missions/{id}/delivery` | Étudiant retenu avec e-mail confirmé. Enregistre `url` (HTTP(S), JSON ou multipart), `attachment` (multipart), ou les deux. PDF, PNG, JPG/JPEG, DOCX, XLSX ou PPTX, 2 Mo maximum. Avant la fin de mission, l’étudiant peut remplacer un livrable précédemment bloqué ou signalé. |
 | `GET /missions/{id}/delivery/attachment` | Étudiant retenu ou entreprise propriétaire vérifiée, avec e-mail confirmé. Télécharge le fichier privé dès le dépôt. Une pièce précédemment bloquée renvoie 404. |
 | `POST /missions/{id}/complete` | Entreprise propriétaire vérifiée. Valide le livrable et termine la mission. Renvoie 409 si le livrable est encore concerné par un blocage ou signalement antérieur. |

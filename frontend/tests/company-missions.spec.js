@@ -1,5 +1,23 @@
 import { expect, test } from '@playwright/test'
 
+test('affiche la photo de l’étudiant retenu dans le suivi entreprise', async ({ page }) => {
+  const photo = '/api/v1/missions/12/applications/3/profile/photo'
+  await page.route('**/api/v1/auth/me', route => route.fulfill({ json: {
+    account: { id: 1, name: 'Beta', role: 'company', status: 'verified', email_verified_at: '2026-01-01' },
+  } }))
+  await page.route('**/api/v1/missions/work', route => route.fulfill({ json: {
+    missions: [{ id: 12, title: 'Prototype', student: 'Issam', student_photo_url: photo, duration: 'Deux semaines' }],
+  } }))
+  await page.route(`**${photo}`, route => route.fulfill({
+    contentType: 'image/png',
+    body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jBXsAAAAASUVORK5CYII=', 'base64'),
+  }))
+  await page.goto('/#missions-en-cours')
+  const mission = page.locator('article').filter({ hasText: 'Étudiant retenu : Issam' })
+  await expect(mission.locator('.ui-avatar img')).toBeVisible()
+  await expect(mission.locator('.ui-avatar img')).toHaveAttribute('src', photo)
+})
+
 test('l’administrateur ouvre le dossier depuis une liste sans données privées', async ({ page }) => {
   let companies = [{ id: 10, name: 'Beta', status: 'pending' }]
   await page.route('**/api/v1/auth/me', route => route.fulfill({ json: {

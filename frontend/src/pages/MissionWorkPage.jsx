@@ -19,6 +19,7 @@ export default function MissionWorkPage({ missions, company, busy, onDeliver, on
     return <article className="panel" key={mission.id}>
       <div className="mission-header">
         <div className="mission-identity">
+          {company && mission.student && <Avatar name={mission.student} photoUrl={mission.student_photo_url} />}
           {!company && mission.company && <Avatar className="company-logo" name={mission.company} photoUrl={mission.company_photo_url} />}
           <h2>{mission.title}</h2>
         </div>
