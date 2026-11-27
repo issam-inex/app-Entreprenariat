@@ -13,6 +13,11 @@
 .student-profile-identity { margin-bottom: 18px; }
 .student-profile-identity h2 { margin: 0; }
 .student-profile-identity .ui-avatar { width: 64px; height: 64px; flex-basis: 64px; font-size: 1.25rem; }
+.profile-photo-editor { display: grid; gap: 8px; }
+.profile-photo-picker > label { position: relative; width: max-content; cursor: pointer; }
+.profile-photo-pencil { position: absolute; right: -5px; bottom: -4px; display: grid; place-items: center; width: 28px; height: 28px; border: 2px solid var(--surface); border-radius: 50%; background: var(--action); color: var(--on-action); }
+.profile-photo-picker:has(input:focus-visible) > label { outline: 3px solid var(--blue); outline-offset: 4px; border-radius: 9px; }
+.profile-photo-picker:has(input[aria-invalid="true"]) .profile-photo-pencil { background: var(--danger-tint); color: var(--danger); }
 .student-profile-reminder { justify-content: space-between; }
 .profile-links-heading { display: flex; align-items: center; gap: 12px; }
 .profile-links-heading h3 { margin: 0; }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FormField, ValidatedForm } from '../components/ValidatedForm.jsx'
-import { Avatar, Button, Notice, Skeleton } from '../components/ui.jsx'
+import { Button, Notice, Skeleton } from '../components/ui.jsx'
+import ProfilePhotoPicker from '../components/ProfilePhotoPicker.jsx'
 import { request } from '../services/api.js'
 
 export default function CompanyProfilePage({ account }) {
@@ -35,14 +36,13 @@ export default function CompanyProfilePage({ account }) {
   if (profile.isError) return <Notice tone="error">{profile.error.message}</Notice>
 
   return <section className="panel">
-    <div className="student-profile-identity"><Avatar name={account.name} photoUrl={profile.data.photo_url} /><h2>{account.name}</h2></div>
     <p className="mission-description">Ces informations apparaissent dans l’annuaire étudiant lorsque votre entreprise est vérifiée.</p>
     {notice && <Notice tone={notice.error ? 'error' : 'success'}>{notice.text}</Notice>}
     <ValidatedForm className="auth-fields form-actions" onSubmit={save}>
-      <FormField label="Photo ou logo de l’entreprise">
-        <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="company-photo-formats" />
-      </FormField>
-      <small id="company-photo-formats">JPG, PNG ou WebP · 2 Mo maximum</small>
+      <div className="student-profile-identity">
+        <ProfilePhotoPicker key={profile.data.photo_url ?? 'empty'} name={account.name} photoUrl={profile.data.photo_url} disabled={saving} />
+        <h2>{account.name}</h2>
+      </div>
       {profile.data.photo_url && <FormField label="Retirer la photo actuelle"><input type="checkbox" name="remove_photo" value="1" /></FormField>}
       <div className="fields">
         <FormField label="Ville"><input name="city" maxLength={100} defaultValue={profile.data.city ?? ''} /></FormField>

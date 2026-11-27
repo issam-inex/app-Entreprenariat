@@ -30,7 +30,9 @@ test('l’étudiant complète son profil à partir du rappel', async ({ page }) 
   await page.getByRole('button', { name: 'Ajouter un lien' }).click()
   await expect(page.getByLabel('Nom de la plateforme')).toHaveCount(2)
   await page.getByRole('button', { name: 'Retirer le lien 2' }).click()
-  await page.getByLabel('Photo de profil').setInputFiles({
+  const chooser = page.waitForEvent('filechooser')
+  await page.locator('.profile-photo-pencil').click()
+  await (await chooser).setFiles({
     name: 'portrait.png', mimeType: 'image/png', buffer: Buffer.from('photo de test'),
   })
   await save.click()
