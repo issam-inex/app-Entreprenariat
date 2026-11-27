@@ -44,6 +44,7 @@ class StudentProfileController extends Controller
 
         return response()->json([
             'name' => $candidate->name,
+            'joined_on' => $candidate->created_at?->setTimezone('Africa/Casablanca')->toDateString(),
             'bio' => $profile?->bio,
             'skills' => $profile?->skills,
             'links' => $profile?->links ?? [],

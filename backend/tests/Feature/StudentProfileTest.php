@@ -45,7 +45,9 @@ class StudentProfileTest extends TestCase
         $this->actingAs($student)->postJson("/api/v1/missions/$mission/applications")->assertOk();
         $this->getJson($candidate)->assertForbidden();
         $this->actingAs($company)->getJson($candidate)->assertOk()
-            ->assertJsonPath('bio', 'Étudiant en design')->assertJsonPath('links', $links)->assertJsonMissingPath('email');
+            ->assertJsonPath('bio', 'Étudiant en design')->assertJsonPath('links', $links)
+            ->assertJsonPath('joined_on', $student->created_at->setTimezone('Africa/Casablanca')->toDateString())
+            ->assertJsonMissingPath('email');
         $this->get("$candidate/photo")->assertOk()->assertHeader('Content-Type', 'image/png');
         $this->postJson("/api/v1/missions/$mission/applications/{$student->id}/accept")->assertOk();
         $this->getJson('/api/v1/missions/work')->assertJsonPath('missions.0.student_photo_url', "$candidate/photo")

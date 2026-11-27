@@ -152,10 +152,11 @@ test('sépare les brouillons des candidatures et ouvre le formulaire de contact'
   await expect(page.getByRole('heading', { name: 'Brouillon Alpha' })).toHaveCount(0)
   await expect(page.getByText('Étudiante test', { exact: true })).toBeVisible()
   await page.route('**/api/v1/missions/2/applications/3/profile', route => route.fulfill({ json: {
-    name: 'Étudiante test', bio: 'Illustratrice', skills: 'Figma', links: [{ name: 'Portfolio', url: 'https://example.test' }],
+    name: 'Étudiante test', joined_on: '2026-01-15', bio: 'Illustratrice', skills: 'Figma', links: [{ name: 'Portfolio', url: 'https://example.test' }],
   } }))
   await page.getByRole('link', { name: 'Voir le profil de Étudiante test' }).click()
   await expect(page.getByText('Illustratrice')).toBeVisible()
+  await expect(page.getByText('Membre de StageLik depuis le 15 janvier 2026')).toBeVisible()
   await expect(page.getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', 'https://example.test')
   await page.getByRole('button', { name: 'Retour aux candidatures' }).click()
   await expect(page.getByRole('button', { name: 'Contacter', exact: true })).toBeDisabled()
